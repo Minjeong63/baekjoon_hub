@@ -2,23 +2,23 @@ class Solution {
     public int[] solution(int[] sequence, int k) {
         int[] answer = new int[2];
         int i = 0, j = 0, sum = sequence[i];
-        int length = Integer.MAX_VALUE;
+        int length = sequence.length;
         
-        while (i <= j && i < sequence.length) {
-            if (sum == k) {
-                if (length > j - i) {
-                    length = j - i;
-                    answer[0] = i;
-                    answer[1] = j;
-                }
-                sum -= sequence[i++];
+        while (i < length && j < length) {
+            System.out.println(i + " " + j);
+            if (sum < k) {
+                j++;
+                sum += sequence[j];
             } else if (sum > k) {
-                sum -= sequence[i++];
+                sum -= sequence[i];
+                i++;
             } else {
-                if (j == sequence.length-1) {
-                    break;
+                answer[0] = i;
+                answer[1] = j;
+                j++;
+                if (j < length) {
+                    sum += sequence[j];
                 }
-                sum += sequence[++j];
             }
         }
         return answer;
