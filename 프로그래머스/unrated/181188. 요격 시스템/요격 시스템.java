@@ -21,8 +21,6 @@ class Solution {
                 num++;
                 position = right-1;
                 continue;
-            } else if (position <= right) {
-               continue;
             }
             
         }
