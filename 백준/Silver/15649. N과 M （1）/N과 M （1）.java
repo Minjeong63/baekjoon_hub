@@ -10,10 +10,15 @@ public class Main {
 	static void perm(int idx) {
 		
 		if (idx == M) {
+            
+			StringBuilder sb = new StringBuilder();
+			
 			for (int i=0; i<permArr.length; i++) {
-				System.out.print(permArr[i] + " ");
+				sb.append(permArr[i] + " ");
 			}
-			System.out.println();
+			
+			System.out.println(sb.toString());
+            
 			return;
 		}
 		
