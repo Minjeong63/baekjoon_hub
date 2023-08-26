@@ -7,28 +7,21 @@ import java.util.StringTokenizer;
 public class Main {
 
 	static int N, M;
-	static int[] permArr;
 	static StringBuilder sb = new StringBuilder();
 	
 	
-	static void perm(int idx) throws IOException {
+	static void perm(int idx, String element) {
 
 		// 기저조건
 		if (idx == M) {
-			
-			for (int i=0; i<permArr.length; i++) {
-				sb.append(permArr[i] + " ");
-			}
-			
-			sb.append("\n");
+			sb.append(element + "\n");
 			return;
 		}
 
 
 		// 유도파트
 		for (int i=1; i<=N; i++) {
-			permArr[idx] = i;
-			perm(idx+1);
+			perm(idx+1, element + i + " ");
 		}
 
 	}
@@ -42,9 +35,7 @@ public class Main {
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
 
-		permArr = new int[M];
-
-		perm(0);
+		perm(0, "");
 		
 		System.out.println(sb.toString());
 	}
