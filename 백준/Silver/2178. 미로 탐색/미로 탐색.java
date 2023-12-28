@@ -1,68 +1,69 @@
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.IOException;
-import java.util.Arrays;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.StringTokenizer;
-import java.awt.Point;
 
 public class Main {
-	static int N;
-	static int M;
-	static boolean[][] visitedArr;
-	static int[][] inputArr;
-	static int distance = 1;
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		N = Integer.parseInt(st.nextToken());
-		M = Integer.parseInt(st.nextToken());
+    static boolean[][] visited;
+    static int[][] maze;
+    static int N;
+    static int M;
+    static int result = 0;
 
-		inputArr = new int[N+1][M+1];
-		for (int i=0; i<N; i++) {
-			String[] inputLine = br.readLine().split("");
-			for (int j=0; j<M; j++) {
-				inputArr[i+1][j+1] = Integer.parseInt(inputLine[j]);
-			}
-		}
+    public static void main(String[] args) throws IOException {
 
-		visitedArr = new boolean[N+1][M+1];
-		
-		bfs(1,1);
-		System.out.println(distance);
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] input = br.readLine().split(" ");
 
-	}
+        N = Integer.parseInt(input[0]);
+        M = Integer.parseInt(input[1]);
 
-	static void bfs(int x, int y) {
-		Queue<Point> queue = new LinkedList<Point>();
-		int[] dx = {-1, 0, 1, 0};
-		int[] dy = {0, 1, 0, -1};
+        visited = new boolean[N][M];
 
-		queue.offer(new Point(x,y));
-		visitedArr[x][y] = true;
+        maze = new int[N][M];
+        for (int i = 0; i < N; i++) {
+            String mazeNum = br.readLine();
+            for (int j = 0; j < M; j++) {
+                int value = mazeNum.charAt(j) - '0';
+                maze[i][j] = value;
+            }
+        }
 
-		while (!queue.isEmpty()) {
-			
-			int qSize = queue.size();
-			for (int k=0; k<qSize; k++) {
-				Point p = queue.poll();
-				if (p.x== N && p.y == M) {
-					return;
-				}
+        bfs(0, 0);
+        System.out.println(result);
+    }
 
-				for (int i=0; i<4; i++) {
-					int changeX = p.x + dx[i];
-					int changeY = p.y + dy[i];
-					
-					if (changeX >= 0 && changeX <= N && changeY >= 0 && changeY <= M && inputArr[changeX][changeY] == 1 && !visitedArr[changeX][changeY]) {
-						queue.offer(new Point(changeX, changeY));
-						visitedArr[changeX][changeY] = true;
-					}
-				}
-			}
-			distance++;
-		}
-	}
+    static void bfs(int x, int y) {
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[]{x, y});
+        visited[x][y] = true;
+
+        while (!queue.isEmpty()) {
+            int queueSize = queue.size();
+            for (int k = 0; k < queueSize; k++) {
+                int[] node = queue.poll();
+                if (node[0] == N - 1 && node[1] == M - 1) {
+                    queue.clear();
+                    break;
+                }
+
+                int[] dx = {-1, 0, 1, 0};
+                int[] dy = {0, 1, 0, -1};
+
+                for (int i = 0; i < 4; i++) {
+                    int a = node[0] + dx[i];
+                    int b = node[1] + dy[i];
+
+                    if (a >= 0 && b >= 0 && a < N && b < M && !visited[a][b] && maze[a][b] == 1) {
+                        queue.add(new int[]{a, b});
+                        visited[a][b] = true;
+                    }
+
+                }
+            }
+            result++;
+        }
+    }
 }
