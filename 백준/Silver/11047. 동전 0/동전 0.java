@@ -17,7 +17,6 @@ public class Main {
         for (int i = 0; i < N; i++) {
             coin[i] = Integer.parseInt(br.readLine());
         }
-        Arrays.sort(coin);
         for (int i = N - 1; i >= 0; i--) {
             if (coin[i] <= K) {
                 min += (K / coin[i]);
