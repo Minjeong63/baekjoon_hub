@@ -1,65 +1,45 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Main {
 
-	public static void main(String[] args) throws IOException {
-		// TODO Auto-generated method stub
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		String input = br.readLine();
-		ArrayList<String> inputArr = new ArrayList<>(); 
+        String input = br.readLine();
 
-		StringBuilder sb = new StringBuilder();
+        String current = "";
+        String sign = "+";
+        int result = 0;
+        for (int i = 0; i < input.length(); i++) {
+            if (input.charAt(i) != '-' && input.charAt(i) != '+') {
+                current += input.charAt(i);
+            } else if (input.charAt(i) == '-') {
+                if (sign.equals("+")) {
+                    result += Integer.parseInt(current);
+                    current = "";
+                    sign = "-";
+                } else {
+                    result -= Integer.parseInt(current);
+                    current = "";
+                }
+            } else {
+                if (sign.equals("-")) {
+                    result -= Integer.parseInt(current);
+                    current = "";
+                } else {
+                    result += Integer.parseInt(current);
+                    current = "";
+                }
 
-		for (int i=0; i<input.length(); i++) {
-			if (input.charAt(i) == '+') {
-				inputArr.add(sb.toString());
-				inputArr.add("+");
-				sb.setLength(0);
-
-			} else if (input.charAt(i) == '-') {
-				inputArr.add(sb.toString());
-				inputArr.add("-");
-				sb.setLength(0);
-
-			} else {
-				sb.append(input.charAt(i));
-			}
-		}
-		inputArr.add(sb.toString());
-		sb.setLength(0);
-		sb.append("+");
-
-		int sum = 0;
-
-		for (int i=0; i<inputArr.size(); i++) {
-			if (inputArr.get(i).equals("+")) {
-				if (!sb.toString().equals("-")) {
-					sb.setLength(0);
-					sb.append("+");
-					
-				} else {
-					continue;
-				}
-
-			} else if (inputArr.get(i).equals("-")) {
-				sb.setLength(0);
-				sb.append("-");
-
-			} else {
-				if (sb.toString().equals("+")) {
-					sum += Integer.parseInt(inputArr.get(i));
-					
-				} else if (sb.toString().equals("-")) {
-					sum -= Integer.parseInt(inputArr.get(i));
-					
-				}
-			}
-		}
-
-		System.out.println(sum);
-
-	}
-
+            }
+        }
+        if (sign.equals("+")) {
+            result += Integer.parseInt(current);
+        } else {
+            result -= Integer.parseInt(current);
+        }
+        System.out.println(result);
+    }
 }
