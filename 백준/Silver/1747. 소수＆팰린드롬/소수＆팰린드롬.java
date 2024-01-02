@@ -9,38 +9,40 @@ public class Main {
 
         int N = Integer.parseInt(br.readLine());
 
-        long result = 0;
-        while (result == 0) {
-            if (isPrime(N) && isPalindrome(N)) {
-                result = N;
-            }
-            N++;
+        int[] prime = new int[10_000_001];
+        for (int i = 2; i < prime.length; i++) {
+            prime[i] = i;
         }
-        System.out.println(result);
-    }
 
-    static boolean isPrime(int N) {
-        if (N == 1) {
-            return false;
-        }
-        for (int i = 2; i * i <= N; i++) {
-            if (N % i == 0) {
-                return false;
+        for (int i = 2; i * i < prime.length; i++) {
+            if (prime[i] == 0) {
+                continue;
+            }
+            for (int j = i + i; j < prime.length; j += i) {
+                prime[j] = 0;
             }
         }
-        return true;
+
+        for (int i = N; i < prime.length; i++) {
+            if (prime[i] != 0 && isPalindrome(i)) {
+                System.out.println(i);
+                break;
+            }
+        }
     }
 
     static boolean isPalindrome(int N) {
-        String num = String.valueOf(N);
-        String reverseNum = "";
-        for (int i = num.length() - 1; i >= 0; i--) {
-            reverseNum += num.charAt(i) - '0';
-        }
+        char[] num = String.valueOf(N).toCharArray();
+        int start = 0;
+        int end = num.length - 1;
 
-        if (num.equals(reverseNum)) {
-            return true;
+        while (start <= end) {
+            if (num[start] != num[end]) {
+                return false;
+            }
+            start++;
+            end--;
         }
-        return false;
+        return true;
     }
 }
