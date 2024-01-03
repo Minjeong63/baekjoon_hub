@@ -13,19 +13,14 @@ public class Main {
             String[] input = br.readLine().split(" ");
             int A = Integer.parseInt(input[0]);
             int B = Integer.parseInt(input[1]);
-            int gcd = gcd(A, B);
-            System.out.println(A * B / gcd);
+            System.out.println(A * B / gcd(A, B));
         }
     }
 
     static int gcd(int a, int b) {
-        int min = Math.max(a, b);
-        int leftover = Math.min(a, b);
-        while (leftover != 0) {
-            int nextMin = leftover;
-            leftover = min % leftover;
-            min = nextMin;
+        if (a == 0) {
+            return b;
         }
-        return min;
+        return gcd(b % a, a);
     }
 }
