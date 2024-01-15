@@ -24,7 +24,7 @@ public class Main {
             }
         }
 
-        for (int i = min - 1; i <= max; i++) {
+        for (int i = min - 1; i < max; i++) {
             visited = new boolean[N][N];
 
             int sum = 0;
