@@ -14,12 +14,23 @@ public class Main {
                 count[0]++;
             }
         }
+        count[0] /= 2;
+        count[1] /= 2;
 
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < count[i] / 2; j++) {
-                sb.append(i);
+        for (int i = 0; i < input.length; i++) {
+            if (input[i].equals("0") && count[0] > 0) {
+                sb.append("0");
+                count[0]--;
             }
+            if (input[i].equals("1")) {
+                if (count[1] > 0) {
+                    count[1]--;
+                } else if (count[1] == 0) {
+                    sb.append("1");
+                }
+            }
+
         }
         System.out.println(sb);
     }
