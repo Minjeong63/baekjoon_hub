@@ -54,15 +54,17 @@ public class Main {
         }
 
         // 50년 후 지도 출력
+        StringBuilder sb = new StringBuilder();
         for (int i = xMin; i <= xMax; i++) {
             for (int j = yMin; j <= yMax; j++) {
                 if (groundsAfter50[i][j]) {
-                    System.out.print("X");
+                    sb.append("X");
                 } else {
-                    System.out.print(".");
+                    sb.append(".");
                 }
             }
-            System.out.println();
+            sb.append("\n");
         }
+        System.out.println(sb);
     }
 }
