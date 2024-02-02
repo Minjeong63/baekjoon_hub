@@ -14,20 +14,18 @@ public class Main {
 
         // i번째 숫자를 마지막으로 하는 가장 긴 증가수열 길이 저장
         int[] dp = new int[N];
-        // 각자 자기 자신을 가진 길이 1의 수열을 포함하기 때문
-        for (int i = 0; i < N; i++) {
-            dp[i] = 1;
-        }
 
         int result = 0;
         for (int i = 0; i < N; i++) {
-            int max = 0;
+            // 각자 자기 자신을 가진 길이 1의 수열을 포함하기 때문
+            dp[i] = 1;
+
             for (int j = 0; j < i; j++) {
-                if (A[j] < A[i]) {
-                    max = Math.max(dp[j], max);
+                // 자기 자신보다 수열 값이 작으면서 dp값은 크거나 같을 때
+                if (A[j] < A[i] && dp[i] <= dp[j]) {
+                    dp[i] = dp[j] + 1;
                 }
             }
-            dp[i] += max;
             result = Math.max(result, dp[i]);
         }
         System.out.println(result);
