@@ -23,21 +23,22 @@ public class Main {
             B[i] = Integer.parseInt(st.nextToken());
         }
 
-        DFS(0, 1, 0, 0);
+        DFS(0, 1, 0);
         System.out.println(answer);
     }
 
     // 트리 깊이, 신맛의 합, 쓴맛의 합, 선택된 재료 개수
-    static void DFS(int level, int s, int b, int selectedCount) {
+    static void DFS(int level, int s, int b) {
         if (level == N) {
-            if (selectedCount != 0 && Math.abs(s - b) < answer) {
+            // 재료를 적어도 하나 선택했으면서 차이가 answer보다 작을 때
+            if (b != 0 && Math.abs(s - b) < answer) {
                 answer = Math.abs(s - b);
             }
             return;
         }
         // 재료를 선택했을 때
-        DFS(level + 1, s * S[level], b + B[level], selectedCount + 1);
+        DFS(level + 1, s * S[level], b + B[level]);
         // 재료를 선택하지 않았을 때
-        DFS(level + 1, s, b, selectedCount);
+        DFS(level + 1, s, b);
     }
 }
