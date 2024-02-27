@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -21,47 +20,26 @@ public class Main {
             dp[i] = i;
         }
 
-        PriorityQueue<Node> pq = new PriorityQueue<>((a, b) -> a.start - b.start);
+        int[][] shortcut = new int[N][3];
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
-            int start = Integer.parseInt(st.nextToken());
-            int end = Integer.parseInt(st.nextToken());
-            int minLength = Integer.parseInt(st.nextToken());
-            pq.add(new Node(start, end, minLength));
+            shortcut[i][0] = Integer.parseInt(st.nextToken());
+            shortcut[i][1] = Integer.parseInt(st.nextToken());
+            shortcut[i][2] = Integer.parseInt(st.nextToken());
         }
 
-        while (!pq.isEmpty()) {
-            Node node = pq.poll();
-            int start = node.start;
-            int end = node.end;
-            int minLength = node.shortcutLength;
+        int[] result = new int[D + 1];
 
-            if (start > D || end > D) {
-                continue;
-            }
-
-            if (dp[start] + minLength < dp[end]) {
-                dp[end] = dp[start] + minLength;
-
-                for (int j = end + 1; j <= D; j++) {
-                    if (dp[end] + j - end < dp[j]) {
-                        dp[j] = dp[end] + j - end;
+        for (int i = 1; i <= D; i++) {
+            result[i] = result[i - 1] + 1;
+            for (int j = 0; j < N; j++) {
+                if (shortcut[j][1] == i) {
+                    if (shortcut[j][2] < shortcut[j][1] - shortcut[j][0]) {
+                        result[i] = Math.min(result[shortcut[j][0]] + shortcut[j][2], result[i]);
                     }
                 }
             }
         }
-        System.out.println(dp[D]);
-    }
-
-    static class Node {
-        int start;
-        int end;
-        int shortcutLength;
-
-        Node(int start, int end, int shortcutLength) {
-            this.start = start;
-            this.end = end;
-            this.shortcutLength = shortcutLength;
-        }
+        System.out.println(result[D]);
     }
 }
