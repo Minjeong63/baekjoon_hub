@@ -1,33 +1,47 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.PriorityQueue;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Main {
     public static void main(String[] arags) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int N = Integer.parseInt(br.readLine());
-        PriorityQueue<Position> pq = new PriorityQueue<>((a, b) -> a.x < b.x ? -1 : a.x == b.x ? a.y - b.y : 1);
+        List<Position> list = new ArrayList<>();
         for (int i = 0; i < N; i++) {
             String[] input = br.readLine().split(" ");
-            pq.add(new Position(Integer.parseInt(input[0]), Integer.parseInt(input[1])));
+            list.add(new Position(Integer.parseInt(input[0]), Integer.parseInt(input[1])));
         }
+        Collections.sort(list);
 
         StringBuilder sb = new StringBuilder();
-        while (!pq.isEmpty()) {
-            Position pos = pq.poll();
+        for (Position pos : list) {
             sb.append(pos.x + " " + pos.y + "\n");
         }
         System.out.println(sb);
     }
 
-    static class Position {
+    static class Position implements Comparable<Position> {
         int x;
         int y;
 
         Position(int x, int y) {
             this.x = x;
             this.y = y;
+        }
+
+        @Override
+        public int compareTo(Position o) {
+            if (x < o.x) {
+                return -1;
+            } else if (x == o.x) {
+                if (y < o.y) {
+                    return -1;
+                }
+            }
+            return 1;
         }
     }
 }
