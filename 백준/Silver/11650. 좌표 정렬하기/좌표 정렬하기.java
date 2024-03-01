@@ -7,37 +7,27 @@ public class Main {
     public static void main(String[] arags) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int N = Integer.parseInt(br.readLine());
-        PriorityQueue<Position> pq = new PriorityQueue<>();
+        PriorityQueue<Position> pq = new PriorityQueue<>((a, b) -> a.x < b.x ? -1 : a.x == b.x ? a.y - b.y : 1);
         for (int i = 0; i < N; i++) {
             String[] input = br.readLine().split(" ");
             pq.add(new Position(Integer.parseInt(input[0]), Integer.parseInt(input[1])));
         }
 
+        StringBuilder sb = new StringBuilder();
         while (!pq.isEmpty()) {
             Position pos = pq.poll();
-            System.out.println(pos.x + " " + pos.y);
+            sb.append(pos.x + " " + pos.y + "\n");
         }
+        System.out.println(sb);
     }
 
-    static class Position implements Comparable<Position> {
+    static class Position {
         int x;
         int y;
 
         Position(int x, int y) {
             this.x = x;
             this.y = y;
-        }
-
-        @Override
-        public int compareTo(Position o) {
-            if (x < o.x) {
-                return -1;
-            } else if (x == o.x) {
-                if (y < o.y) {
-                    return -1;
-                }
-            }
-            return 1;
         }
     }
 }
