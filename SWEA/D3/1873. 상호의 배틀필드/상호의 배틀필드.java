@@ -37,6 +37,8 @@ public class Solution {
 	static int W;
 	static String[][] gameMap;
 	static int count = 1;
+	static int[] carPosition;
+	static int[] carDirection;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -48,8 +50,8 @@ public class Solution {
 			H = Integer.parseInt(st.nextToken()); // 높이
 			W = Integer.parseInt(st.nextToken()); // 너비
 			
-			int[] carPosition = new int[2]; // 전차 위치
-			int[] carDirection = new int[2]; // 전차 방향
+			carPosition = new int[2]; // 전차 위치
+			carDirection = new int[2]; // 전차 방향
 			
 			gameMap = new String[H][W];
 			for (int i=0; i<H; i++) {
@@ -95,166 +97,105 @@ public class Solution {
 			
 			for (String input : inputs) {
 				if (input.equals("U")) {
-					carDirection[0] = -1;
-					carDirection[1] = 0;
-					
-					gameMap[carPosition[0]][carPosition[1]] = "^";
-					
-					int posX = carPosition[0] + carDirection[0];
-					int posY = carPosition[1] + carDirection[1];
-					
-					if (posX < 0 || posY < 0 || posX >= H || posY >= W) {
-						continue;
-					}
-					
-					if (gameMap[posX][posY].equals(".")) {
-						gameMap[posX][posY] = "^";
-						gameMap[carPosition[0]][carPosition[1]] = ".";
-						
-						carPosition[0] = posX;
-						carPosition[1] = posY;
-					}
+					move(-1, 0, "^");
 					
 				} else if (input.equals("D")) {
-					carDirection[0] = 1;
-					carDirection[1] = 0;
-					
-					gameMap[carPosition[0]][carPosition[1]] = "v";
-					
-					int posX = carPosition[0] + carDirection[0];
-					int posY = carPosition[1] + carDirection[1];
-					
-					if (posX < 0 || posY < 0 || posX >= H || posY >= W) {
-						continue;
-					}
-					
-					if (gameMap[posX][posY].equals(".")) {
-						gameMap[posX][posY] = "v";
-						gameMap[carPosition[0]][carPosition[1]] = ".";
-						
-						carPosition[0] = posX;
-						carPosition[1] = posY;
-					}
+					move(1, 0, "v");
 					
 				} else if (input.equals("L")) {
-					carDirection[0] = 0;
-					carDirection[1] = -1;
-					
-					gameMap[carPosition[0]][carPosition[1]] = "<";
-					
-					int posX = carPosition[0] + carDirection[0];
-					int posY = carPosition[1] + carDirection[1];
-					
-					if (posX < 0 || posY < 0 || posX >= H || posY >= W) {
-						continue;
-					}
-					
-					if (gameMap[posX][posY].equals(".")) {
-						gameMap[posX][posY] = "<";
-						gameMap[carPosition[0]][carPosition[1]] = ".";
-						
-						carPosition[0] = posX;
-						carPosition[1] = posY;
-					}
+					move(0, -1, "<");
 					
 				} else if (input.equals("R")) {
-					carDirection[0] = 0;
-					carDirection[1] = 1;
-					
-					gameMap[carPosition[0]][carPosition[1]] = ">";
-					
-					int posX = carPosition[0] + carDirection[0];
-					int posY = carPosition[1] + carDirection[1];
-					
-					if (posX < 0 || posY < 0 || posX >= H || posY >= W) {
-						continue;
-					}
-					
-					if (gameMap[posX][posY].equals(".")) {
-						gameMap[posX][posY] = ">";
-						gameMap[carPosition[0]][carPosition[1]] = ".";
-						
-						carPosition[0] = posX;
-						carPosition[1] = posY;
-					}
+					move(0, 1, ">");
 					
 				} else if (input.equals("S")) {
-					
-// - 전차가 포탑을 발사하면, 포탄은 벽돌로 만들어진 벽 또는 강철로 만들어진 벽에 충돌하거나 게임 맵 밖으로 나갈 때까지 직진
-// - 포탄이 벽에 부딪히면 포탄 소멸, 부딪힌 벽이 벽돌이면 이 벽은 파괴되어 평지가 됨
-// - 포탄이 강철 벽에 부딪히면 아무 일도 없음
-// - 게임 맵 밖으로 포탄이 나가면 아무 일도 없음
+					int x = carPosition[0];
+					int y = carPosition[1];
 					
 					// 위
 					if (carDirection[0] == -1) {
-						
-						int x = carPosition[0];
-						while (x >= 0) {
-							String movePos = gameMap[x][carPosition[1]];
-							if (movePos.equals("*")) {
-								gameMap[x][carPosition[1]] = ".";
-								break;
-							} else if (movePos.equals("#")) {
+						int changeX = x;
+						while (changeX >= 0) {
+							if (!isMoveS(changeX, y)) {
 								break;
 							}
-							x = x + carDirection[0];
+							changeX = changeX + carDirection[0];
 						}
 						
 						
 						// 아래
 					} else if (carDirection[0] == 1) {
-						
-						int x = carPosition[0];
-						while (x < H) {
-							String movePos = gameMap[x][carPosition[1]];
-							if (movePos.equals("*")) {
-								gameMap[x][carPosition[1]] = ".";
-								break;
-							} else if (movePos.equals("#")) {
+						int changeX = x;
+						while (changeX < H) {
+							if (!isMoveS(changeX, y)) {
 								break;
 							}
-							x = x + carDirection[0];
+							changeX = changeX + carDirection[0];
 						}
 						
 						
 						// 왼
 					} else if (carDirection[1] == -1) {
-						
-						int y = carPosition[1];
-						while (y >= 0) {
-							String movePos = gameMap[carPosition[0]][y];
-							if (movePos.equals("*")) {
-								gameMap[carPosition[0]][y] = ".";
-								break;
-							} else if (movePos.equals("#")) {
+						int changeY = y;
+						while (changeY >= 0) {
+							if (!isMoveS(x, changeY)) {
 								break;
 							}
-							y = y + carDirection[1];
+							changeY = changeY + carDirection[1];
 						}
 						
 						
 						// 오
 					} else if (carDirection[1] == 1) {
-						
-						int y = carPosition[1];
-						while (y < W) {
-							String movePos = gameMap[carPosition[0]][y];
-							if (movePos.equals("*")) {
-								gameMap[carPosition[0]][y] = ".";
-								break;
-							} else if (movePos.equals("#")) {
+						int changeY = y;
+						while (changeY < W) {
+							if (!isMoveS(x, changeY)) {
 								break;
 							}
-							y = y + carDirection[1];
+							changeY = changeY + carDirection[1];
 						}
 					}
 					
 				}
+	
 			}
 			
 			printOutput();
 			count++;
 		}
+	}
+	
+	static void move(int directX, int directY, String shape) {
+		carDirection[0] = directX;
+		carDirection[1] = directY;
+		
+		gameMap[carPosition[0]][carPosition[1]] = shape;
+		
+		int posX = carPosition[0] + carDirection[0];
+		int posY = carPosition[1] + carDirection[1];
+		
+		if (posX < 0 || posY < 0 || posX >= H || posY >= W) {
+			return;
+		}
+		
+		if (gameMap[posX][posY].equals(".")) {
+			gameMap[posX][posY] = shape;
+			gameMap[carPosition[0]][carPosition[1]] = ".";
+			
+			carPosition[0] = posX;
+			carPosition[1] = posY;
+		}
+	}
+	
+	static boolean isMoveS(int x, int y) {
+		String movePos = gameMap[x][y];
+		if (movePos.equals("*")) {
+			gameMap[x][y] = ".";
+			return false;
+		} else if (movePos.equals("#")) {
+			return false;
+		}
+		return true;
 	}
 	
 	static void printOutput() {
