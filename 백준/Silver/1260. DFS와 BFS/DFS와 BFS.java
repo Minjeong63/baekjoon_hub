@@ -4,78 +4,80 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
-
-    static boolean[] visitedDfs;
-    static boolean[] visitedBfs;
-    static ArrayList<Integer>[] list;
-    static Queue<Integer> queue = new LinkedList<>();
-    static StringBuilder sbDfs = new StringBuilder();
-    static StringBuilder sbBfs = new StringBuilder();
+    static int N;
+    static List<Integer>[] graph;
+    static boolean[] dfsIsVisited;
+    static StringBuilder result = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
-
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
-        int V = Integer.parseInt(st.nextToken());
+        N = Integer.parseInt(st.nextToken()); // 정점 개수
+        int M = Integer.parseInt(st.nextToken()); // 간선 개수
+        int V = Integer.parseInt(st.nextToken()); // 탐색 시작 번호
 
-        list = new ArrayList[N + 1];
-        visitedDfs = new boolean[N + 1];
-        visitedBfs = new boolean[N + 1];
-
-        for (int i = 1; i <= N; i++) {
-            list[i] = new ArrayList<>();
+        graph = new ArrayList[N + 1];
+        for (int i=1; i<=N; i++) {
+            graph[i] = new ArrayList<>();
         }
 
-        for (int i = 0; i < M; i++) {
+        for (int i=0; i<M; i++) {
             st = new StringTokenizer(br.readLine());
-            int a = Integer.parseInt(st.nextToken());
-            int b = Integer.parseInt(st.nextToken());
-
-            list[a].add(b);
-            list[b].add(a);
+            int node1 = Integer.parseInt(st.nextToken());
+            int node2 = Integer.parseInt(st.nextToken());
+            graph[node1].add(node2);
+            graph[node2].add(node1);
         }
 
-        for (int i = 1; i <= N; i++) {
-            Collections.sort(list[i]);
+        // 정점 번호가 작은 것을 먼저 방문하기 위해
+        for (int i=1; i<=N; i++) {
+            Collections.sort(graph[i]);
         }
 
+        dfsIsVisited = new boolean[N + 1];
         dfs(V);
-
-        queue.add(V);
-        visitedBfs[V] = true;
+        result.append("\n");
         bfs(V);
-
-        System.out.println(sbDfs);
-        System.out.println(sbBfs);
+        System.out.println(result);
     }
 
-    static void dfs(int n) {
-        visitedDfs[n] = true;
-        sbDfs.append(n + " ");
+    static void dfs(int start) {
+        result.append(start).append(" ");
+        dfsIsVisited[start] = true;
 
-        for (int element : list[n]) {
-            if (!visitedDfs[element]) {
-                dfs(element);
+        List<Integer> prevNodeList = graph[start];
+        for (int i=0; i<graph[start].size(); i++) {
+            if (!dfsIsVisited[prevNodeList.get(i)]) {
+                dfs(prevNodeList.get(i));
             }
         }
     }
 
-    static void bfs(int n) {
-        while (!queue.isEmpty()) {
-            int node = queue.poll();
-            sbBfs.append(node + " ");
+    static void bfs(int start) {
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(start);
 
-            for (int element : list[node]) {
-                if (!visitedBfs[element]) {
-                    queue.add(element);
-                    visitedBfs[element] = true;
+        boolean[] visited = new boolean[N + 1];
+
+        while (!queue.isEmpty()) {
+            int visitedNode = queue.poll();
+            if (visited[visitedNode]) {
+                continue;
+            }
+
+            result.append(visitedNode).append(" ");
+            visited[visitedNode] = true;
+
+            List<Integer> prevNodeList = graph[visitedNode];
+            for (int i=0; i<graph[visitedNode].size(); i++) {
+                if (!visited[prevNodeList.get(i)]) {
+                    queue.add(prevNodeList.get(i));
                 }
             }
         }
