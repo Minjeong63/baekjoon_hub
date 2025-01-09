@@ -52,32 +52,30 @@ public class Main {
         dfsIsVisited[start] = true;
 
         List<Integer> prevNodeList = graph[start];
-        for (int i=0; i<graph[start].size(); i++) {
-            if (!dfsIsVisited[prevNodeList.get(i)]) {
-                dfs(prevNodeList.get(i));
+        for (Integer nextNode : prevNodeList) {
+            if (!dfsIsVisited[nextNode]) {
+                dfs(nextNode);
             }
         }
     }
 
     static void bfs(int start) {
         Queue<Integer> queue = new LinkedList<>();
+        boolean[] visited = new boolean[N + 1];
+
+        visited[start] = true;
         queue.add(start);
 
-        boolean[] visited = new boolean[N + 1];
 
         while (!queue.isEmpty()) {
             int visitedNode = queue.poll();
-            if (visited[visitedNode]) {
-                continue;
-            }
-
             result.append(visitedNode).append(" ");
-            visited[visitedNode] = true;
 
             List<Integer> prevNodeList = graph[visitedNode];
-            for (int i=0; i<graph[visitedNode].size(); i++) {
-                if (!visited[prevNodeList.get(i)]) {
-                    queue.add(prevNodeList.get(i));
+            for (Integer nextNode : prevNodeList) {
+                if (!visited[nextNode]) {
+                    visited[nextNode] = true;
+                    queue.add(nextNode);
                 }
             }
         }
